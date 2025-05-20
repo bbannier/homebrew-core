@@ -56,9 +56,9 @@ class Zeek < Formula
     inreplace "auxil/spicy/spicy/runtime/tests/benchmarks/CMakeLists.txt",
       "add_executable(spicy-rt-parsing-benchmark parsing.cc ${_generated_sources})",
       "add_executable(spicy-rt-parsing-benchmark EXCLUDE_FROM_ALL parsing.cc ${_generated_sources})"
-    inreplace "auxil/spicy/3rdparty/justrx/CMakeLists.txt" do |s|
-      s.gsub! "add_subdirectory(src/tests)", ""
-    end
+    inreplace "auxil/spicy/3rdparty/justrx/src/tests/CMakeLists.txt",
+      "add_executable(bench benchmark.cc)",
+      "add_executable(bench EXCLUDE_FROM_ALL benchmark.cc)"
     (buildpath/"auxil/spicy/3rdparty/CMakeLists.txt").append_lines <<~CMAKE
       set_target_properties(benchmark PROPERTIES EXCLUDE_FROM_ALL ON)
       set_target_properties(benchmark_main PROPERTIES EXCLUDE_FROM_ALL ON)
