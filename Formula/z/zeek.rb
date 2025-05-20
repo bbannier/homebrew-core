@@ -48,17 +48,18 @@ class Zeek < Formula
     inreplace "auxil/spicy/hilti/toolchain/src/config.cc.in", "${CMAKE_CXX_COMPILER}", ENV.cxx
 
     # Benchmarks are not installed, but building them on Linux breaks in the
-    # bundled google-benchmark dependency. Exclude the benchmark targets an
-    # their library dependency.
+    # bundled google-benchmark dependency. Exclude the benchmark targets and
+    # their library dependencies.
     inreplace "auxil/spicy/hilti/runtime/CMakeLists.txt",
       "add_executable(hilti-rt-fiber-benchmark src/benchmarks/fiber.cc)",
       "add_executable(hilti-rt-fiber-benchmark EXCLUDE_FROM_ALL src/benchmarks/fiber.cc)"
     inreplace "auxil/spicy/spicy/runtime/tests/benchmarks/CMakeLists.txt",
       "add_executable(spicy-rt-parsing-benchmark parsing.cc ${_generated_sources})",
       "add_executable(spicy-rt-parsing-benchmark EXCLUDE_FROM_ALL parsing.cc ${_generated_sources})"
-    inreplace "auxil/spicy/3rdparty/justrx/CMakeLists.txt", "add_subdirectory(src/tests)", ""
-    inreplace "auxil/spicy/3rdparty/justrx/CMakeLists.txt", "add_subdirectory(src/tests)", ""
-    "auxil/spicy/3rdparty/CMakeLists.txt".write <<~CMAKE
+    inreplace "auxil/spicy/3rdparty/justrx/CMakeLists.txt" do |s|
+      s.gsub! "add_subdirectory(src/tests)", ""
+    end
+    (buildpath/"auxil/spicy/3rdparty/CMakeLists.txt").append_lines <<~CMAKE
       set_target_properties(benchmark PROPERTIES EXCLUDE_FROM_ALL ON)
       set_target_properties(benchmark_main PROPERTIES EXCLUDE_FROM_ALL ON)
     CMAKE
