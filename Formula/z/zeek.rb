@@ -47,6 +47,12 @@ class Zeek < Formula
     # Avoid references to the Homebrew shims directory
     inreplace "auxil/spicy/hilti/toolchain/src/config.cc.in", "${CMAKE_CXX_COMPILER}", ENV.cxx
 
+    # Benchmarks are not installed, but building them on Linux breaks in the
+    # bundled google-benchmark dependency.
+    inreplace "auxil/spicy/spicy/runtime/tests/benchmarks/CMakeLists.txt",
+      "add_executable(spicy-rt-parsing-benchmark parsing.cc ${_generated_sources})",
+      "add_executable(spicy-rt-parsing-benchmark EXCLUDE_FROM_ALL parsing.cc ${_generated_sources})"
+
     system "cmake", "-S", ".", "-B", "build",
                     "-DBROKER_DISABLE_TESTS=on",
                     "-DINSTALL_AUX_TOOLS=on",
